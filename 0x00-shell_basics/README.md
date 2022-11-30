@@ -1,1 +1,1 @@
-pwd prints absolute path name of the current working directory
+shell commands for nagivation
