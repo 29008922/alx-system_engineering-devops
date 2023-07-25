@@ -1,4 +1,0 @@
-#!/usr/bin/env bash
-#creating ssh key pair to be used to connect to my server in the remote data centre
-
-ssh ubuntu -i ~/.ssh/school
