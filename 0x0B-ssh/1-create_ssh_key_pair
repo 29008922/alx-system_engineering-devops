@@ -1,0 +1,4 @@
+#!/usr/bin/env bash
+#generating ssh key pair to be used to securely connect into server in the remote
+
+ssh-keygen -t rsa -b 4096 -P betty -f school

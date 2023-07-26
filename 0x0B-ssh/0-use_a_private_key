@@ -1,0 +1,4 @@
+#!/usr/bin/env bash
+#creating ssh key to be used to connect to server in the remote
+
+ssh ubuntu -i ~/.ssh/school
