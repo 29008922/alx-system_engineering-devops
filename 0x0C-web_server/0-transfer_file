@@ -1,13 +1,32 @@
 #!/usr/bin/env bash
 # A Bash script to transfer file from a client to a server.
-# Using the scp linux command, we're taking  the following arguments
-# PATH_TO_FILE to be copied to server, USER on server IP of server
-# LOCATION to copy to on server and PATH_TO_IDENTITY_FILE for user auth
+# checking if the arguments entered is upto 4
+#if the commandline arguments is less than 4  return an error
 
 if [ $# -lt 4 ]
-	then
-		echo 'Usage: 0-transfer_file PATH_TO_FILE IP USERNAME PATH_TO_SSH_KEY'
-
-	else
-		scp -o StrictHostKeyChecking=no -i "$4" "$1" "$3"@"$2":~
+then
+	echo 'Usage: 0-transfer_file PATH_TO_FILE IP USERNAME PATH_TO_SSH_KEY'
+	exit 1
 fi
+# assign argument  to the the variable
+
+path_to_file=$1
+ip=$2
+username=$3
+path_to_ssh_key=$4
+
+#deactivating strict host key checking
+
+scp -i "StrickHostKeyCheckiing=no" -i "$path_to_ssh_key" "$path_to_file" "$username@ip:~/"
+
+# checking if the file transfered is successful or not
+
+if [ $? -eq 0 ]
+then
+	echo "FILE WAS MOVED SUCCESSFULLY"
+
+else
+	echo "FILE TRANSFER FAILED"
+fi
+
+
