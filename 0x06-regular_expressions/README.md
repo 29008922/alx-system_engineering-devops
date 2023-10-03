@@ -1,2 +1,2 @@
-s projects containg files containg concepts of regular expresion 
+This project containg files of the regular expresion 
 for character and pattern matching
