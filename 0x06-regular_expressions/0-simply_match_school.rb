@@ -1,3 +1,3 @@
-#usr/bin/bash/ruby
+#usr/bin/bash/env ruby
 
 puts ARGV[0].scan(/School/).join
