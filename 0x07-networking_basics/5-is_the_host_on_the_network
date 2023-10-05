@@ -1,0 +1,7 @@
+#!/usr/bin/env bash
+#a Bash script that ping an IP adress passed as an ARG
+#accept strind as an argument
+#Display usage Usage: 5-is_the_host_on_the_network {IP_ADDRESS} if no argument passed
+#Ping an IP adress received 5 times
+
+
