@@ -1,0 +1,9 @@
+#!/usr/bin/env bash
+#a Bash script that configures an Ubuntu server with the below requirements:
+#localhost configured to resolve to IP 127.0.0.2
+#facebook.com configured to resolve to IP 8.8.8.8
+
+cp /etc/hosts ~/hosts.new
+echo 127.0.0.2	> host.new
+echo 8.8.8.8	> host.new
+cp -f ~/hosts.new /etc/hosts
