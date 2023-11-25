@@ -1,16 +1,12 @@
 #!/usr/bin/env bash
-#writting a script using puppet to configure files
+# Automating my Tasks using Puppet
 
-
-file { 'ect/ssh/ssh_config':
-	ensure => present,
-
-content =>" 
-	
-	#SSH client configuration
-	host*
-	IdentityFile ~/.ssh/school
-	PasswordAuthentification no
-	",
+file { '/etc/ssh/ssh_config':
+  ensure  => present,
+content => "
+    # SSH client configuration
+    Host *
+      IdentityFile ~/.ssh/school
+      PasswordAuthentication no
+  ",
 }
-
