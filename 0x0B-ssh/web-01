@@ -1,9 +1,0 @@
-#!/usr/bin/env bash
-#this files is meant to create a script that runs to connect to my server in the remote
-
-
-eval $("ssh-agent")
-
-ssh-add ~/.ssh/school
-
-ssh ubuntu@52.207.73.212
