@@ -2,10 +2,10 @@
 #writting a script using puppet to configure files
 
 
-file { 'etc/ssh/ssh_config':
+file { 'ect/ssh/ssh_config':
 	ensure => present,
 
-content => "
+content =>" 
 	
 	#SSH client configuration
 	host*
