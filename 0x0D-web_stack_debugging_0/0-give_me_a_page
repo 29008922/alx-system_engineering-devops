@@ -1,4 +1,4 @@
 #!/usr/bin/env bash
-# Run Apache on the 265-0 Docker container.
-echo "ServerName localhost" >> /etc/apache2.conf
+#installing apache2 inside docker container
+
 service apache2 start
