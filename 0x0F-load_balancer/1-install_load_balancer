@@ -1,63 +1,21 @@
 #!/usr/bin/env bash
+# configures a new HAproxy as a load balancer
 
-# Update and upgrade packages
-sudo apt update && sudo apt upgrade -y
+# Install HAproxy on a server
+apt-get -y update
+apt-get -y install haproxy=1.6.\*
 
-# Install HAProxy
-sudo apt install -y haproxy
+# Configure haproxy configuration file to distribute requests using a roundrobin algorithm
+echo '
+frontend haronshop.tech 
+        bind 0:80
+        default_backend web_servers
 
-# Configure HAProxy
-sudo tee /etc/haproxy/haproxy.cfg > /dev/null <<EOF
-global
-    log 127.0.0.1 local0
-    stats socket /run/haproxy.sock mode 660 level admin
-    user haproxy
-    group haproxy
+backend web_servers
+        balance roundrobin
+        server 124997-web-01 18.209.178.74:80 check 
+        server 124997-web-02 100.26.253.250:80 check 
+' >> /etc/haproxy/haproxy.cfg
 
-defaults
-    mode http
-    log global
-    option httplog
-    timeout connect 5s
-    timeout server 30s
-    balance roundrobin
-
-frontend 29008922_frontend
-    bind *:80
-    default_backend 29008922_backend
-
-backend 29008922_backend
-    option httpchk GET /
-    mode http
-    server 124997-web-01 18.209.178.74:80 check
-    server 124997-web-02 18.206.197.133:80 check
-EOF
-# Create systemd service for HAProxy
-sudo tee /etc/systemd/system/haproxy.service > /dev/null <<EOF
-[Unit]
-Description=HAProxy Load Balancer
-After=network.target
-
-[Service]
-Type=forking
-User=haproxy
-Group=haproxy
-PIDFile=/run/haproxy.pid
-Environment="HAPROXY_OPTS=-W -f /etc/haproxy/haproxy.cfg"
-ExecStartPre=/bin/mkdir -p /run/haproxy
-ExecStart=/usr/sbin/haproxy -f /etc/haproxy/haproxy.cfg
-ExecReload=/bin/kill -USR2 \$MAINPID
-ExecStop=/bin/kill -SIGTERM \$MAINPID
-
-[Install]
-WantedBy=multi-user.target
-EOF
-
-# Reload systemd and enable HAProxy service
-sudo systemctl daemon-reload
-sudo systemctl enable haproxy
-sudo systemctl start haproxy
-
-# Verify HAProxy is running
-sudo systemctl status haproxy
-
+# Restart HAproxy service
+service haproxy restart
