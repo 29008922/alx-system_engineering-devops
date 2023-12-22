@@ -32,18 +32,18 @@ defaults
         errorfile 503 /etc/haproxy/errors/503.http
         errorfile 504 /etc/haproxy/errors/504.http
 
-backend atieno.tech-backend
+backend haronshop.tech-backend
         balance roundrobin
         server 124997-web-01 18.209.178.74:80 check
 
         server 124997-web-02 18.206.197.133:80 check
 
-frontend atieno.tech-https-frontend
-        bind 0.0.0.0:443 ssl crt /etc/haproxy/certs/www.atieno.tech.pem
+frontend haronshop.tech-https-frontend
+        bind 0.0.0.0:443 ssl crt /etc/haproxy/certs/www.haronshop.tech.pem
         http-request set-header X-Forwarded-Proto https
-default_backend atieno.tech-backend
+default_backend haronshop.tech-backend
 
-frontend atieno.tech-http-frontend
+frontend haronshop.tech-http-frontend
         bind 0.0.0.0:80
         http-request set-header X-Forwarded-Proto http
-        default_backend atieno.tech-backend
+        default_backend haronshop.tech-backend
