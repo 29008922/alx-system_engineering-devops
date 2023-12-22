@@ -32,16 +32,16 @@ defaults
         errorfile 503 /etc/haproxy/errors/503.http
         errorfile 504 /etc/haproxy/errors/504.http
 
-frontend  ollyjhay-frontend
+frontend  haronshop-frontend
         bind *:80
  mode http
         bind *:443 ssl crt /etc/haproxy/certs/www.ollyjhay.tech.pem
         redirect scheme https if !{ ssl_fc }
-        default_backend ollyjhay-backend
-backend ollyjhay-backend
+        default_backend haronshop-backend
+backend haronshop-backend
         balance roundrobin
-        server 93511-web-01 35.174.209.1:80 check
-        server 93511-web-02 35.153.52.94:80 check
+        server 124997-web-01 18.209.178.74:80 check
+        server 8124997-web-020 100.26.253.250:80 check
 
 listen http-in
         bind :80
