@@ -46,4 +46,7 @@ default_backend haronshop.tech-backend
 frontend haronshop.tech-http-frontend
         bind 0.0.0.0:80
         http-request set-header X-Forwarded-Proto http
+
+
+C
         default_backend haronshop.tech-backend
