@@ -1,50 +1,61 @@
 #!/usr/bin/python3
+""" Count it! """
+from requests import get
 
-import requests
+REDDIT = "https://www.reddit.com/"
+HEADERS = {'user-agent': 'my-app/0.0.1'}
 
-def count_words(subreddit, word_list, after="", counts={}):
-    """Recursively queries the Reddit API, counts keyword occurrences in hot post titles,
-       and prints the results in sorted order.
 
-    Args:
-        subreddit (str): The name of the subreddit to query.
-        word_list (list): A list of keywords to count.
-        after (str, optional): Continuation token for pagination. Defaults to "".
-        counts (dict, optional): Dictionary to store keyword counts. Defaults to {}.
+def count_words(subreddit, word_list, after="", word_dic={}):
     """
+    Returns a list containing the titles of all hot articles for a
+    given subreddit. If no results are found for the given subreddit,
+    the function should return None.
+    """
+    if not word_dic:
+        for word in word_list:
+            word_dic[word] = 0
 
-    url = f"https://www.reddit.com/r/{subreddit}/hot.json?after={after}"
-    headers = {"User-Agent": "YourAppName/0.1 (for educational purposes)"}
+    if after is None:
+        word_list = [[key, value] for key, value in word_dic.items()]
+        word_list = sorted(word_list, key=lambda x: (-x[1], x[0]))
+        for w in word_list:
+            if w[1]:
+                print("{}: {}".format(w[0].lower(), w[1]))
+        return None
+
+    url = REDDIT + "r/{}/hot/.json".format(subreddit)
+
+    params = {
+        'limit': 100,
+        'after': after
+    }
+
+    r = get(url, headers=HEADERS, params=params, allow_redirects=False)
+
+    if r.status_code != 200:
+        return None
 
     try:
-        response = requests.get(url, headers=headers, allow_redirects=False)
-        response.raise_for_status()
+        js = r.json()
 
-        data = response.json()
-        posts = data.get("data", {}).get("children", [])
+    except ValueError:
+        return None
 
-        for post in posts:
-            title = post.get("data", {}).get("title")
-            if title:
-                for word in word_list:
-                    word = word.lower()  # Case-insensitive comparison
-                    if word in title.lower().split():
-                        counts[word] = counts.get(word, 0) + title.lower().split().count(word)  # Count multiple occurrences
+    try:
 
-        after = data.get("data", {}).get("after")  # Check for next page
-        if after:
-            count_words(subreddit, word_list, after, counts)  # Recursive call for pagination
+        data = js.get("data")
+        after = data.get("after")
+        children = data.get("children")
+        for child in children:
+            post = child.get("data")
+            title = post.get("title")
+            lower = [s.lower() for s in title.split(' ')]
 
-    except requests.exceptions.RequestException as e:
-        print(f"An error occurred: {e}")
+            for w in word_list:
+                word_dic[w] += lower.count(w.lower())
 
-    else:
-        if counts:
-            sorted_counts = sorted(counts.items(), key=lambda item: (-item[1], item[0]))  # Sort by count (descending), then alphabetically
-            for word, count in sorted_counts:
-                print(f"{word}: {count}")
+    except:
+        return None
 
-# Example usage:
-subreddit_name = "programming"
-words_to_count = ["JAVA", "javascript", "python", "java"]
-count_words(subreddit_name, words_to_count)
+    count_words(subreddit, word_list, after, word_dic)
