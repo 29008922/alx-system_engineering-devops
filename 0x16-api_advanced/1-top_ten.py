@@ -1,35 +1,18 @@
 #!/usr/bin/python3
+"""Module for task 1"""
 
-import requests
 
 def top_ten(subreddit):
-    """Queries the Reddit API and prints the titles of the first 10 hot posts for a given subreddit.
+    """Queries the Reddit API and returns the top 10 hot posts
+    of the subreddit"""
+    import requests
 
-    Args:
-        subreddit (str): The name of the subreddit to query.
-    """
-
-    url = f"https://www.reddit.com/r/{subreddit}/hot.json"
-    headers = {"User-Agent": "My-User-Agent/0.1"}
-
-    try:
-        response = requests.get(url, headers=headers, allow_redirects=False)  # Prevent redirects
-        response.raise_for_status()  # Raise an exception for error status codes
-
-        data = response.json()
-        posts = data.get("data", {}).get("children", [])
-
-        if posts:
-            for post in posts[:10]:  # Print titles of the first 10 posts
-                title = post.get("data", {}).get("title")
-                print(title)
-        else:
-            print("No posts found.")
-
-    except requests.exceptions.RequestException as e:
-        print(f"An error occurred while fetching subreddit data: {e}")
-        print("None")  # Indicate invalid subreddit or error
-
-# Example usage:
-subreddit_name = "news"  # Replace with the subreddit you want to check
-top_ten(subreddit_name)
+    sub_info = requests.get("https://www.reddit.com/r/{}/hot.json?limit=10"
+                            .format(subreddit),
+                            headers={"User-Agent": "My-User-Agent"},
+                            allow_redirects=False)
+    if sub_info.status_code >= 300:
+        print('None')
+    else:
+        [print(child.get("data").get("title"))
+         for child in sub_info.json().get("data").get("children")]
